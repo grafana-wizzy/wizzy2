@@ -6,8 +6,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Provider defines a set of read-only methods for accessing the application
-// configuration params as defined in one of the config files.
 type Provider interface {
 	ConfigFileUsed() string
 	Get(key string) interface{}
@@ -25,6 +23,7 @@ type Provider interface {
 	GetTime(key string) time.Time
 	InConfig(key string) bool
 	IsSet(key string) bool
+	WriteConfigAs(filename string) error
 }
 
 var defaultConfig *viper.Viper
@@ -48,11 +47,7 @@ func readViperConfig(appName string) *viper.Viper {
 	v.SetEnvPrefix(appName)
 	v.AutomaticEnv()
 
-	// global defaults
-	
-	v.SetDefault("json_logs", false)
-	v.SetDefault("loglevel", "debug")
-	
+	v.SetDefault("loglevel", "info")
 
 	return v
 }
